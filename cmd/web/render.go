@@ -10,15 +10,15 @@ import (
 var pathToTemplates = "./cmd/web/templates"
 
 type TemplateData struct {
-	StringMap    map[string]string
-	IntMap       map[string]int
-	FloatMap     map[string]float64
-	Data         map[string]any
-	Flash        string
-	Warning      string
-	Error        string
-	Autheticated bool
-	Now          time.Time
+	StringMap     map[string]string
+	IntMap        map[string]int
+	FloatMap      map[string]float64
+	Data          map[string]any
+	Flash         string
+	Warning       string
+	Error         string
+	Authenticated bool
+	Now           time.Time
 	// User         *data.User
 }
 
@@ -62,7 +62,7 @@ func (app *Config) AddDefaultData(td *TemplateData, r *http.Request) *TemplateDa
 	td.Error = app.Session.PopString(r.Context(), "error")
 
 	if app.IsAuthenticated(r) {
-		td.Autheticated = true
+		td.Authenticated = true
 	}
 
 	td.Now = time.Now()
