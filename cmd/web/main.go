@@ -42,6 +42,20 @@ func main() {
 	}
 	// set up sending emails
 	// listen for web conns
+	app.serve()
+}
+
+func (app *Config) serve() {
+	srv := http.Server{
+		Addr:    ":" + webPort,
+		Handler: app.Routes(),
+	}
+
+	app.InfoLog.Println("Starting web server")
+	if err := srv.ListenAndServe(); err != nil {
+		log.Panic(err)
+	}
+
 }
 
 func initDB() *sql.DB {
