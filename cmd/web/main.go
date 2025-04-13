@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/gob"
 	"log"
 	"net/http"
 	"os"
@@ -111,6 +112,7 @@ func openDB(dsn string) (*sql.DB, error) {
 }
 
 func initSession() *scs.SessionManager {
+	gob.Register(data.User{})
 	session := scs.New()
 	session.Store = redisstore.New(initRedis())
 	session.Lifetime = 25 * time.Hour
