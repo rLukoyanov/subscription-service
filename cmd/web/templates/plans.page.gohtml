@@ -1,6 +1,8 @@
 {{template "base" .}}
 
 {{define "content" }}
+
+    {{$user := .User}}
     <div class="container">
         <div class="row">
             <div class="col-md-8 offset-md-2">
@@ -20,7 +22,11 @@
                             <td>{{.PlanName}}</td>
                             <td>{{.PlanAmountFormatted}}/month</td>
                             <td>
+                                {{if  and ($user.Plan) (eq $user.Plan.ID .ID)}}
+                                    <strong>current plan</strong>
+                                {{else}}
                                 <a href="#!" onClick="selectPlan({{.ID}}, '{{.PlanName}}')">Select</a>
+                                {{end}}
                             </td>
                         </tr>
                     {{end}}
@@ -38,15 +44,16 @@
     "></script>
     <script>
         function selectPlan(x, plan) {
-        Swal.fire({
-            title: "Subscribe",
-            html: "are u shure?",
-            showCancelButton: true,
-            confirmButtonText: "subscribe"
-        }).then((result) => {
-            if(result.isConfirmed) {
-                {{/* window.location.href = "/subscribe?id=" + x; */}}
-            }
-        })
+            Swal.fire({
+                title: "Subscribe",
+                html: "are u shure?",
+                showCancelButton: true,
+                confirmButtonText: "subscribe"
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    window.location.href = "/subscribe?id=" + x;
+                }
+            })
+        }
     </script>
 {{end}}
