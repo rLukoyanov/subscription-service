@@ -174,4 +174,28 @@ func (app *Config) SubscribeToPlan(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}
+
+	app.Wait.Add(1)
+
+	go func() {
+		defer app.Wait.Done()
+
+		invoice, err := app.getInvoce(user, plan)
+		if err != nil {
+			app.ErrorChan <- err
+		}
+
+		msg := Message{
+			To:       user.Email,
+			Subject:  "invoce",
+			Data:     invoice,
+			Template: "Invoice",
+		}
+
+		app.sendEmail(msg)
+	}()
+}
+
+func (app *Config) getInvoce(u data.User, plan *data.Plan) (string, error) {
+	return plan.PlanAmountFormatted, nil
 }
