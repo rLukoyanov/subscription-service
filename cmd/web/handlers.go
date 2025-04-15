@@ -221,6 +221,16 @@ func (app *Config) SubscribeToPlan(w http.ResponseWriter, r *http.Request) {
 
 		app.sendEmail(msg)
 	}()
+
+	err = app.Models.Plan.SubscribeUserToPlan(user, *plan)
+	if err != nil {
+		app.Session.Put(r.Context(), "error", "login first")
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+
+	app.Session.Put(r.Context(), "flash", "subscribed")
+	http.Redirect(w, r, "/members/plans", http.StatusSeeOther)
 }
 
 func (app *Config) getInvoce(u data.User, plan *data.Plan) (string, error) {
